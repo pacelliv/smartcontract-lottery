@@ -1,4 +1,4 @@
-# Hardhat Smart Contract Lottery (Raffle)
+# Lottery Smart Contract (Raffle)
 
 <div align = "center">
     <img src="/images/card.png">
