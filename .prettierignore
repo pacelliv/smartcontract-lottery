@@ -14,7 +14,3 @@ typechain
 # don't push the environment vars!
 .env
 notes.txt
-
-card
-index.html
-index.css
