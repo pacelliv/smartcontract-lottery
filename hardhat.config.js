@@ -6,14 +6,23 @@ require("hardhat-gas-reporter")
 require("hardhat-contract-sizer")
 require("dotenv").config()
 
-const RPC_URL_GOERLI = process.env.RPC_URL_GOERLI || "https://goerli.net/"
-PRIVATE_KEY = process.env.PRIVATE_KEY || "0x"
-ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "Your etherscan API key"
-COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "Your CoinmarketCap API Key"
+const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "https://goerli.net/"
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x"
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "Your etherscan API key"
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "Your CoinmarketCap API Key"
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-    solidity: "0.8.17",
+    solidity: {
+        compilers: [
+            {
+                version: "0.8.8",
+            },
+            {
+                version: "0.6.6",
+            },
+        ],
+    },
     defaultNetwork: "hardhat",
     networks: {
         hardhat: {
@@ -26,7 +35,7 @@ module.exports = {
         goerli: {
             chainId: 5,
             blockConfirmations: 6,
-            url: RPC_URL_GOERLI,
+            url: GOERLI_RPC_URL,
             accounts: [PRIVATE_KEY],
         },
     },

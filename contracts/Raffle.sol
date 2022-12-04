@@ -32,7 +32,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
     // uint256 0 = OPEN, 1 = CALCULATING
 
     /*State Variables */
-    // since the entrance Fee will be established one time, this variable can be immutable to save gas.
+    // Since the entrance fee will be established one time, this variable can be immutable to save gas.
     uint256 private immutable i_entranceFee;
     // s_player is going to be in storage because the size of this array is variable.
     address payable[] private s_players;
@@ -89,7 +89,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
     }
 
     /**
-     * @dev checkUpkeep is the function that the Chainlink Keepers nodes will call to know if performUpKeep()
+     * @dev CheckUpkeep is the function that the Chainlink Keepers nodes will call to know if performUpKeep()
      * should be call by them. They look for the `upKeepNeeded` to return true.
      * The following need should be true in order for `upKeepNeeded` to return true:
      * 1. Our time interval should have passed
@@ -99,9 +99,9 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
      */
 
     function checkUpkeep(
-        // checkData allows to specify anything when the checkUpKeep is called. Having checkData of type
+        // CheckData allows to specify anything when the checkUpKeep is called. Having checkData of type
         // bytes allows to specify it to call other functions.
-        // checkData can be commented out but I still need to specify the parameter it is.
+        // CheckData can be commented out but I still need to specify the parameter it is.
         bytes memory /*checkData*/
     )
         public
@@ -127,10 +127,8 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
      * requestId is the randomness order to be fulfilled by the Chainlink VFR service.
      */
 
-    // equivalent to requestRandomWords() and was renamed to performUpKeep()
-    function performUpkeep(
-        bytes calldata /*performData */
-    ) external override {
+    // Equivalent to requestRandomWords() and was renamed to performUpKeep()
+    function performUpkeep(bytes calldata /*performData */) external override {
         // Since I'm passing an empty string to checkUpKeep("") and this function requires a calldata and calldata doesn't work with strings,
         // I need to specify performData as memory in checkUpkeep.
         (bool upkeepNeeded, ) = checkUpkeep("");
@@ -159,12 +157,12 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
      * of the lottery.
      */
 
-    /* think of this function as fullfiled random numbers*/
+    /* Think of this function as fullfiled random numbers*/
     function fulfillRandomWords(
-        uint256, /* requestId not use in this contract*/
+        uint256 /* requestId not use in this contract*/,
         uint256[] memory randomWords
     ) internal override {
-        //Once we got the random number we want to pick a random winner from the array of players using the Modulo function
+        // Once we got the random number we want to pick a random winner from the array of players using the Modulo function
         uint256 indexOfWinner = randomWords[0] % s_players.length;
         address payable recentWinner = s_players[indexOfWinner];
         s_recentWinner = recentWinner;
@@ -178,7 +176,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
         emit winnerPicked(recentWinner);
     }
 
-    /*View and pure functions */
+    /* View and pure functions */
     function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
     }
@@ -195,7 +193,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
         return s_raffleState;
     }
 
-    // since NUM_WORDS is in the byte codes and is not strictly reading from storage, therefore, it can be a pure function
+    // Since NUM_WORDS is in the byte codes and is not strictly reading from storage, therefore, it can be a pure function
     function getNumWords() public pure returns (uint256) {
         return NUM_WORDS;
     }
