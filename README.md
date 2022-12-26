@@ -98,7 +98,7 @@ Go to [automation.chain.link](https://automation.chain.link/) and register a new
     <p>Screenshot. The optional fields can be left blank.</p>
 </div>
 
-6. Enter your Raffle
+6. Enter your Raffle and get a winner
 
 Your contract is now setup to be a tamper proof autonomous verifiably random lottery. Create a new terminal and run:
 
@@ -110,6 +110,12 @@ Enter the lottery by running:
 
 ```
 yarn hardhat run scripts/enter.js --network localhost
+```
+
+Find a winner by running:
+
+```
+yarn hardhat run scripts/mockOffChain.js --network localhost
 ```
 
 To test your contract in a testnet replace `localhost` for `goerli` in the previous command and run it.
