@@ -118,7 +118,7 @@ Find a winner by running:
 yarn hardhat run scripts/mockOffChain.js --network localhost
 ```
 
-To test your contract in a testnet replace `localhost` for `goerli` in the previous command and run it.
+**Note**: these commands only work on the localhost.
 
 ## Estimate gas cost in USD
 
