@@ -1,5 +1,3 @@
-# Lottery Smart Contract (Raffle)
-
 <div align = "center">
     <img src="/images/banner.png">
 </div>
