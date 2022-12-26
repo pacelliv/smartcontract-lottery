@@ -1,12 +1,10 @@
-const { ethers, getNamedAccounts } = require("hardhat")
-let deployer
+const { ethers } = require("hardhat")
 
 async function enterRaffle() {
-    deployer = (await getNamedAccounts()).deployer
-    const raffle = await ethers.getContract("Raffle", deployer)
+    const raffle = await ethers.getContract("Raffle")
     console.log(`Got Raffle contract at ${raffle.address}`)
     const entranceFee = await raffle.getEntranceFee()
-    await raffle.enterRaffle({ value: entranceFee + 1 })
+    await raffle.enterRaffle({ value: entranceFee + 1 }) // add extra ETH to cover for gas fees
     console.log("You have entered the raffle, Good luck!")
 }
 
