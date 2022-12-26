@@ -2,7 +2,7 @@
     <img src="/images/banner.png">
 </div>
 
-# Getting Started
+## Getting Started
 
 To run this repo you need to install the following packages:
 
@@ -13,7 +13,7 @@ To run this repo you need to install the following packages:
 -   [Yarn](https://nodejs.org/en/)
     -   Instead of `npm` install `yarn`. In the terminal run the command `yarn --version`, if the output looks like `x.xx.xx` that means the package was installed.
 
-# Quickstart
+## Quickstart
 
 Clone this repo, cd into the folder and and run `yarn` to install the dependencies.
 
@@ -23,7 +23,7 @@ cd hardhat-fund-me
 yarn
 ```
 
-# Usage
+## Usage
 
 -   Compile
 
@@ -49,7 +49,7 @@ yarn hardhat test
 yarn hardhat coverage
 ```
 
-# Deployment to a testnet
+## Deployment to a testnet
 
 1. Set up environment variables:
 
@@ -114,13 +114,13 @@ yarn hardhat run scripts/enter.js --network localhost
 
 To test your contract in a testnet replace `localhost` for `goerli` in the previous command and run it.
 
-# Estimate gas cost in USD
+## Estimate gas cost in USD
 
 To get a USD estimation of gas cost, you'll need a `COINMARKETCAP_API_KEY` environment variable. You can get one for free from [CoinMarketCap](https://pro.coinmarketcap.com/account).
 
 Then, uncomment the line coinmarketcap: `COINMARKETCAP_API_KEY`, in `hardhat.config.js` to get the USD estimation. Just note, everytime you run your tests it will use an API call, so it might make sense to have using coinmarketcap disabled until you need it. You can disable it by just commenting the line back out.
 
-# Verify on Etherscan
+## Verify on Etherscan
 
 If you deploy to a testnet or mainnet, you can verify it if you get an [API Key](https://etherscan.io/login?cmd=last) from Etherscan and set it as an environemnt variable named `ETHERSCAN_API_KEY`. You can pop it into your `.env` file as seen in the `.env.example`.
 
@@ -132,11 +132,11 @@ yarn hardhat verify <DEPLOYED_CONTRACT_ADDRESS> --constructor-args
 
 In it's current state, if you have your api key set, it will auto verify goerli contracts.
 
-# Typescript
+## Typescript
 
 There's no typescript version of this repo, but PRs are welcome!
 
-# Linting
+## Linting
 
 To check linting / code formatting:
 
@@ -150,10 +150,10 @@ or, to fix:
 yarn lint:fix
 ```
 
-# Acknowledgements
+## Acknowledgements
 
 I want to thanks [PatrickAlphaC](https://github.com/PatrickAlphaC) for teaching me the necessary tools to complete this project in my journey to become a full stack developer.
 
-# Thank you 🎉 🎉
+## Thank you 🎉 🎉
 
 I hope you like this project and it ends up being useful to you 👨‍💻
