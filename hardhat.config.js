@@ -5,6 +5,7 @@ require("solidity-coverage")
 require("hardhat-gas-reporter")
 require("hardhat-contract-sizer")
 require("dotenv").config()
+require("./tasks")
 
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "https://goerli.net/"
 const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x"
@@ -31,6 +32,7 @@ module.exports = {
         },
         localhost: {
             chainId: 31337,
+            blockConfirmations: 1,
         },
         goerli: {
             chainId: 5,
@@ -40,29 +42,29 @@ module.exports = {
         },
     },
 
-    //this might be redundant but it helped me verify my contract in goerli
     etherscan: {
         apiKey: {
             goerli: ETHERSCAN_API_KEY,
             //polygon: POLYGONSCAN_API_KEY,
         },
-        customChains: [
-            {
-                network: "goerli",
-                chainId: 5,
-                urls: {
-                    apiURL: "https://api-goerli.etherscan.io/api",
-                    browserURL: "https://goerli.etherscan.io/",
-                },
-            },
-        ],
+        // Uncomment in case of "CustomChains not iterable" error
+        // customChains: [
+        //     {
+        //         network: "goerli",
+        //         chainId: 5,
+        //         urls: {
+        //             apiURL: "https://api-goerli.etherscan.io/api",
+        //             browserURL: "https://goerli.etherscan.io/",
+        //         },
+        //     },
+        // ],
     },
     gasReporter: {
         enabled: false,
         currency: "USD",
         outputFile: "gas-report.txt",
         noColors: true,
-        // coinmarketcap: COINMARKETCAP_API_KEY,
+        coinmarketcap: COINMARKETCAP_API_KEY,
         // token: "MATIC",
     },
     namedAccounts: {
