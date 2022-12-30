@@ -13,7 +13,7 @@ typechain
 
 # don't push the environment vars!
 .env
-notes.txt
+notes.md
 
 card
 index.html
