@@ -10,17 +10,18 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     const chainId = network.config.chainId
     let vrfCoordinatorV2Address, subscriptionId, vrfCoordinatorV2Mock
 
+    // If we're in a development chain:
     if (developmentChains.includes(network.name)) {
-        vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
-        vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address
-        const transactionResponse = await vrfCoordinatorV2Mock.createSubscription()
-        const transactionReceipt = await transactionResponse.wait()
-        subscriptionId = transactionReceipt.events[0].args.subId
-        // Fund the subscription
-        await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_SUB_FUND_AMOUNT)
+        vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock") // Fetch the contract's bytcode and abi from the artifact folder.
+        vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address // Sets the address of the mock
+        const transactionResponse = await vrfCoordinatorV2Mock.createSubscription() // Creates a subscription to add our contract as a consumer.
+        const transactionReceipt = await transactionResponse.wait(1) // Waits 1 block confirmation for the transaction to be mined.
+        subscriptionId = transactionReceipt.events[0].args.subId // Gets the subscription ID from the event emitted by the coordinator.
+        await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_SUB_FUND_AMOUNT) // Fund the subscription
     } else {
-        vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"]
-        subscriptionId = networkConfig[chainId]["subscriptionId"]
+        // If we're in a testnet or mainnet:
+        vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"] // Gets the address of the coordinator from the hardhat-helper-config.
+        subscriptionId = networkConfig[chainId]["subscriptionId"] // First I create a subscription ID in Chainlink Subscription Manager and then I deploy.
     }
 
     const entranceFee = networkConfig[chainId]["entranceFee"]
@@ -44,12 +45,11 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
     })
     log("--------------------------------------------------------------------")
 
-    // We need to add our smart contract to the list of consumers of the Chainlink vrfCoordinator
-    // after deployment for the following reasons:
-    //  - Creation of the vrfCoordinator is only required for local testing, on testnet this is
-    //  provided by Chainlink.
-    //  - Creation of subscription
-    //  - Only after adding our smart contract to the list of consumers we can use requestRandomWords
+    // If we're working in a development chain, ee need to add our smart contract to the list of
+    // consumers of the Chainlink vrfCoordinator after deployment for the following reasons:
+    //  - Creation of the vrfCoordinatorMock is only required for local testing, on testnet this
+    //  service is automated.
+    //  - Only after adding our smart contract to the list of consumers we can use requestRandomWords.
     if (developmentChains.includes(network.name)) {
         const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
         await vrfCoordinatorV2Mock.addConsumer(subscriptionId, raffle.address)
@@ -57,7 +57,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         log("--------------------------------------------------------------------")
     }
 
-    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+    if (!developmentChains.includes(network.name) && process.env.POLYGONSCAN_API_KEY) {
         await verify(raffle.address, arguments)
         log("--------------------------------------------------------------------")
     }

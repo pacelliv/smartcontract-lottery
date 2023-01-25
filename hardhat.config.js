@@ -1,16 +1,25 @@
-require("@nomiclabs/hardhat-waffle")
+require("@nomicfoundation/hardhat-toolbox")
 require("@nomiclabs/hardhat-etherscan")
 require("hardhat-deploy")
-require("solidity-coverage")
-require("hardhat-gas-reporter")
-require("hardhat-contract-sizer")
-require("dotenv").config()
 require("./tasks")
+require("dotenv").config()
 
-const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "https://goerli.net/"
-const PRIVATE_KEY = process.env.PRIVATE_KEY || "0x"
+// RPC URLs
+const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL || "https://eth-goerli.g.alchemy.com/v2/apiKey"
+const MUMBAI_RPC_URL =
+    process.env.MUMBAI_RPC_URL || "https://polygon-mumbai.g.alchemy.com/v2/apiKey"
+
+// Private keys
+const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY || "0x"
+const MUMBAI_PRIVATE_KEY = process.env.MUMBAI_PRIVATE_KEY || "0x"
+
+// Other keys
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || "Your etherscan API key"
+const POLYGONSCAN_API_KEY = process.env.POLYGONSCAN_API_KEY || "You polygon API key"
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || "Your CoinmarketCap API Key"
+
+// General
+const REPORT_GAS = process.env.REPORT_GAS || false
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -24,7 +33,9 @@ module.exports = {
             },
         ],
     },
+
     defaultNetwork: "hardhat",
+
     networks: {
         hardhat: {
             chainId: 31337,
@@ -38,35 +49,51 @@ module.exports = {
             chainId: 5,
             blockConfirmations: 6,
             url: GOERLI_RPC_URL,
-            accounts: [PRIVATE_KEY],
+            accounts: GOERLI_PRIVATE_KEY !== undefined ? [GOERLI_PRIVATE_KEY] : [],
+        },
+        polygonMumbai: {
+            chainId: 80001,
+            blockConfirmations: 6,
+            url: MUMBAI_RPC_URL,
+            accounts: MUMBAI_PRIVATE_KEY !== undefined ? [MUMBAI_PRIVATE_KEY] : [],
         },
     },
 
     etherscan: {
         apiKey: {
             goerli: ETHERSCAN_API_KEY,
-            //polygon: POLYGONSCAN_API_KEY,
+            polygonMumbai: POLYGONSCAN_API_KEY,
         },
-        // Uncomment in case of "CustomChains not iterable" error
-        // customChains: [
-        //     {
-        //         network: "goerli",
-        //         chainId: 5,
-        //         urls: {
-        //             apiURL: "https://api-goerli.etherscan.io/api",
-        //             browserURL: "https://goerli.etherscan.io/",
-        //         },
-        //     },
-        // ],
+        // Uncomment in case of "customChains not iterable" error during contract verification
+        customChains: [
+            {
+                network: "goerli",
+                chainId: 5,
+                urls: {
+                    apiURL: "https://api-goerli.etherscan.io/api",
+                    browserURL: "https://goerli.etherscan.io/",
+                },
+            },
+            // {
+            //     network: "polygonMumbai",
+            //     chainId: 80001,
+            //     url: {
+            //         apiURL: "https://api-testnet.polygonscan.com/",
+            //         browserURL: "https://mumbai.polygonscan.com/",
+            //     },
+            // },
+        ],
     },
+
     gasReporter: {
-        enabled: false,
+        enabled: REPORT_GAS,
         currency: "USD",
         outputFile: "gas-report.txt",
         noColors: true,
         coinmarketcap: COINMARKETCAP_API_KEY,
         // token: "MATIC",
     },
+
     namedAccounts: {
         deployer: {
             default: 0,
@@ -75,6 +102,7 @@ module.exports = {
             default: 1,
         },
     },
+
     mocha: {
         timeout: 500000,
     },

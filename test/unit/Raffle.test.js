@@ -44,7 +44,8 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
 
           describe("enterRaffle", () => {
               it("revert if you don't pay enough", async () => {
-                  await expect(raffle.enterRaffle()).to.be.revertedWith(
+                  await expect(raffle.enterRaffle()).to.be.revertedWithCustomError(
+                      raffle,
                       "Raffle__NotEnoughETHEntered"
                   )
               })
@@ -61,25 +62,25 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               })
 
               // For this hook we want RaffleState to be in a close state, currently the state is
-              // OPEN to change it from OPEN to CALCULATING we need to call performUpkeep
+              // OPEN to change it from OPEN to CALCULATING we need to call performUpkeep,
               // but performUpkeep can only be call if checkUpkeep returns TRUE -- otherwise
               // it will revert with "Raffle__UpkeepNotNeeded()" -- to make this function return
-              // TRUE we need isOpen, timePassed, hasPlayers and hasBalance TRUE.
+              // TRUE, we need isOpen, timePassed, hasPlayers and hasBalance TRUE.
               it("doesn't allow entrance when raffle is calculating", async () => {
                   await raffle.enterRaffle({ value: entranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1]) // To accelerate the time we use this method to make timePassed true
                   await network.provider.send("evm_mine", []) // We pass an empty array to only mine one block.
                   await raffle.performUpkeep([]) // Pretend to be the a Chainlink Node by calling performUpkeep() and pass to it an empty array that represents the empty callData
                   // Now RaffleState should be in a CALCULATING state.
-                  await expect(raffle.enterRaffle({ value: entranceFee })).to.be.revertedWith(
-                      "Raffle__NotOpen"
-                  )
+                  await expect(
+                      raffle.enterRaffle({ value: entranceFee })
+                  ).to.be.revertedWithCustomError(raffle, "Raffle__NotOpen")
               })
           })
 
           describe("checkUpkeep", () => {
               // Since checkUpkeep is a public function using "await raffle.checkUpkeep([])" will result in
-              // a transaction, but I only want to simulate the transaction to see if the state of upkeepNeeded is false
+              // a transaction, but I only want to simulate the transaction to see if the state of upkeepNeeded is false.
               it("returns false if there's no balance in the Raffle", async () => {
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
                   await network.provider.send("evm_mine", [])
@@ -109,7 +110,8 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
               })
               it("reverts when checUpkeep is false", async () => {
                   // If needed we can be more specific by passing the parameters to Raffle__UpKeepNotNeeded()
-                  await expect(raffle.performUpkeep([])).to.be.revertedWith(
+                  await expect(raffle.performUpkeep([])).to.be.revertedWithCustomError(
+                      raffle,
                       "Raffle__UpKeepNotNeeded"
                   )
               })
@@ -133,7 +135,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
           })
 
           describe("fulfillRandomWords", () => {
-              // fulfillRandomWords can only be call if there's a requestId, that's guaranteed in the beforeEach hook
+              // fulfillRandomWords can only be call if there's a requestId, that's guaranteed in the beforeEach hook.
               beforeEach(async () => {
                   await raffle.enterRaffle({ value: entranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
@@ -148,8 +150,8 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   ).to.be.revertedWith("nonexistent request")
               })
 
-              // 1. First we want to call performUpkeep (mock being Chainlink Keepers)
-              // 2. Then we want to call fulfillRandomWords (mock being Chainlink VRF)
+              // 1. First we want to call performUpkeep (mock being the Chainlink Keepers).
+              // 2. Then we want to call fulfillRandomWords (mock being the Chainlink VRF).
               // 3. After both these things have happened we can record if:
               //    - Recent winner gets recorded
               //    - RaffleState, s_players and s_lastTimeStamp were reset
@@ -171,7 +173,7 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
                   }
                   const startingTimeStamp = await raffle.getLatestTimeStamp()
                   await new Promise(async (resolve, reject) => {
-                      raffle.once("winnerPicked", async () => {
+                      raffle.once("WinnerPicked", async () => {
                           // setting up the listener
                           console.log("winnerPicked event fired!")
                           try {

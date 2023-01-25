@@ -3,9 +3,9 @@ const { networkConfig } = require("../../helper-hardhat-config")
 const { ethers } = require("hardhat")
 
 async function cancelSubscription() {
+    const subscriptionId = "SUBSCRIPTION ID TO CANCEL"
     const vrfCoordinatorV2Address = networkConfig[network.config.chainId]["vrfCoordinatorV2"]
     const [signer] = await ethers.getSigners()
-    const subscriptionId = "8066" // insert subId to cancel
     const vrfCoordinatorV2Contract = new ethers.Contract(
         vrfCoordinatorV2Address,
         vrfCoordinator_abi,

@@ -4,9 +4,9 @@ const { ethers } = require("hardhat")
 
 async function removeConsumer() {
     const raffle = await ethers.getContract("Raffle")
+    const subscriptionId = networkConfig[network.config.chainId]["subscriptionId"]
     const vrfCoordinatorV2Address = networkConfig[network.config.chainId]["vrfCoordinatorV2"]
     const [signer] = await ethers.getSigners()
-    const subscriptionId = "8037" // insert subId to remove consumer
     const vrfCoordinatorV2Contract = new ethers.Contract(
         vrfCoordinatorV2Address,
         vrfCoordinator_abi,

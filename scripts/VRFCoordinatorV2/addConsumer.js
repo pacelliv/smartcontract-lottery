@@ -4,6 +4,7 @@ const { ethers } = require("hardhat")
 
 async function addConsumer() {
     const raffle = await ethers.getContract("Raffle")
+    const subscriptionId = networkConfig[network.config.chainId]["subscriptionId"]
     const vrfCoordinatorV2Address = networkConfig[network.config.chainId]["vrfCoordinatorV2"]
     const [signer] = await ethers.getSigners()
     const vrfCoordinatorV2Contract = new ethers.Contract(
@@ -11,7 +12,6 @@ async function addConsumer() {
         vrfCoordinator_abi,
         signer
     )
-    const subscriptionId = "8037" // insert subId to add consumer
 
     console.log(
         `Adding consumer ${raffle.address} to VRFCoordinatorV2 at ${vrfCoordinatorV2Address} on ${network.name} network...`
