@@ -3,6 +3,7 @@
 </div>
 
 ### ⚡️⚡️ Live Demo: https://plain-flower-7694.on.fleek.co/
+
 ### ⚡️⚡️ ipfs://QmSSgn6s6yp8Zxy4Fv9AustXvVNV1MBQ6SJpHdx5Y349B1
 
 ## Overview
@@ -159,7 +160,7 @@ You contract is deployed and added as consumer to the VRF Service and it's been 
 yarn hardhat test --network goerli
 ```
 
-It will take some time, but after the test has finished. Head over to goerli etherscan and you will see that you enter the raffle, and in the internal transactions tab you will see the calling of `checkUpkeep` and `performUpkeep`
+It will take some time to complete the test, but after it is completed head over to goerli etherscan and you will see that you enter the raffle, and in the internal transactions tab you will see the calling of `checkUpkeep` and `performUpkeep`.
 
 ## Estimate gas cost in USD
 
