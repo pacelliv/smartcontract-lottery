@@ -29,6 +29,8 @@ const networkConfig = {
 }
 
 const developmentChains = ["hardhat", "localhost"]
+const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("2")
+const VERIFICATION_BLOCK_CONFIRMATIONS = 6
 const FRONTEND_ADDRESSES_FILE =
     "../../frontend-apps/raffle-frontend/constants/contractAddresses.json"
 const FRONTEND_ABI_FILE = "../../frontend-apps/raffle-frontend/constants/abi.json"
@@ -38,4 +40,6 @@ module.exports = {
     developmentChains,
     FRONTEND_ABI_FILE,
     FRONTEND_ADDRESSES_FILE,
+    VERIFICATION_BLOCK_CONFIRMATIONS,
+    VRF_SUB_FUND_AMOUNT,
 }

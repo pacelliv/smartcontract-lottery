@@ -1,16 +1,22 @@
 const { network, ethers } = require("hardhat")
-const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const {
+    developmentChains,
+    networkConfig,
+    VERIFICATION_BLOCK_CONFIRMATIONS,
+    VRF_SUB_FUND_AMOUNT,
+} = require("../helper-hardhat-config")
 const { verify } = require("../utils/verify")
-
-const VRF_SUB_FUND_AMOUNT = ethers.utils.parseEther("2")
 
 module.exports = async function ({ getNamedAccounts, deployments }) {
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
     const chainId = network.config.chainId
+    const blockConfirmations = developmentChains.includes(network.name)
+        ? 1
+        : VERIFICATION_BLOCK_CONFIRMATIONS
     let vrfCoordinatorV2Address, subscriptionId, vrfCoordinatorV2Mock
 
-    // If we're in a development chain:
+    // If we're deploying on a development chain:
     if (developmentChains.includes(network.name)) {
         vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock") // Fetch the contract's bytcode and abi from the artifact folder.
         vrfCoordinatorV2Address = vrfCoordinatorV2Mock.address // Sets the address of the mock
@@ -19,7 +25,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         subscriptionId = transactionReceipt.events[0].args.subId // Gets the subscription ID from the event emitted by the coordinator.
         await vrfCoordinatorV2Mock.fundSubscription(subscriptionId, VRF_SUB_FUND_AMOUNT) // Fund the subscription
     } else {
-        // If we're in a testnet or mainnet:
+        // If we're deploying on a testnet or mainnet:
         vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"] // Gets the address of the coordinator from the hardhat-helper-config.
         subscriptionId = networkConfig[chainId]["subscriptionId"] // First I create a subscription ID in Chainlink Subscription Manager and then I deploy.
     }
@@ -41,7 +47,7 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         from: deployer,
         args: arguments,
         log: true,
-        waitConfirmations: network.config.blockConfirmations || 1,
+        waitConfirmations: blockConfirmations,
     })
     log("--------------------------------------------------------------------")
 

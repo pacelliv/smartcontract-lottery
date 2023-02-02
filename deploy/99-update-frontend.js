@@ -28,6 +28,7 @@ async function updateContractAddresses() {
     }
 
     fs.writeFileSync(FRONTEND_ADDRESSES_FILE, JSON.stringify(currentAddresses))
+    console.log("Frontend update.")
 }
 
 module.exports.tags = ["all", "frontend"]

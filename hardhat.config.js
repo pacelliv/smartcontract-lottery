@@ -39,21 +39,17 @@ module.exports = {
     networks: {
         hardhat: {
             chainId: 31337,
-            blockConfirmations: 1,
         },
         localhost: {
             chainId: 31337,
-            blockConfirmations: 1,
         },
         goerli: {
             chainId: 5,
-            blockConfirmations: 6,
             url: GOERLI_RPC_URL,
             accounts: GOERLI_PRIVATE_KEY !== undefined ? [GOERLI_PRIVATE_KEY] : [],
         },
         polygonMumbai: {
             chainId: 80001,
-            blockConfirmations: 6,
             url: MUMBAI_RPC_URL,
             accounts: MUMBAI_PRIVATE_KEY !== undefined ? [MUMBAI_PRIVATE_KEY] : [],
         },
@@ -64,7 +60,7 @@ module.exports = {
             goerli: ETHERSCAN_API_KEY,
             polygonMumbai: POLYGONSCAN_API_KEY,
         },
-        // Uncomment in case of "customChains not iterable" error during contract verification
+        // Uncomment in case of "customChains not iterable" error during contract verification.
         customChains: [
             {
                 network: "goerli",
