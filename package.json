@@ -1,8 +1,8 @@
 {
     "name": "smartcontract-lottery",
     "license": "MIT",
-    "version": "2.0.0",
-    "description": "A repo for boilerplate code for testing, deploying, and shipping chainlink solidity code.",
+    "version": "1.0.0",
+    "description": "A sample contract of a decentralized lottery",
     "scripts": {
         "test": "yarn hardhat test",
         "test-staging": "yarn hardhat test --network goerli",

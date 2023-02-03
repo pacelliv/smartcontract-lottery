@@ -4,7 +4,7 @@ const { FRONTEND_ABI_FILE, FRONTEND_ADDRESSES_FILE } = require("../helper-hardha
 
 module.exports = async () => {
     if (process.env.UPDATE_FRONTEND) {
-        console.log("Updating frontend...")
+        console.log("Updating frontend constants folder...")
         await updateContractAddresses()
         await updateAbi()
     }
@@ -28,7 +28,7 @@ async function updateContractAddresses() {
     }
 
     fs.writeFileSync(FRONTEND_ADDRESSES_FILE, JSON.stringify(currentAddresses))
-    console.log("Frontend update.")
+    console.log("Constants folder updated!")
 }
 
 module.exports.tags = ["all", "frontend"]
